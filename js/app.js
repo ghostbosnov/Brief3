@@ -28,13 +28,13 @@ let coursecontainer=document.querySelector('#courses-container');
 let carte = document.createElement('article');
 carte='',
 cours.forEach((course)=>{
-    carte +=`<article class="cursor-pointer overflow-hidden rounded-2xl bg-white shadow-sm ring-2 ring-teal-600 transition hover:shadow-md" data-id="yoga">
-            <img src = ${course.image} alt="Visuel du cours Yoga Flow" class="h-36 w-full object-cover" />
+    carte +=`<article class="cursor-pointer overflow-hidden rounded-2xl bg-white shadow-sm ring-2 ring-teal-600 transition hover:shadow-md" data-id="${course.id}">
+            <img src = ${course.image} alt="Visuel du cours ${course.nom}" class="h-36 w-full object-cover" />
             <div class="space-y-1 p-4">
-              <span class="inline-block rounded-full bg-teal-50 px-2.5 py-0.5 text-xs font-medium text-teal-700">Yoga</span>
+              <span class="inline-block rounded-full bg-teal-50 px-2.5 py-0.5 text-xs font-medium text-teal-700">${course.id}</span>
               <h3 class="text-lg font-semibold text-slate-900">${course.nom}</h3>
               <p class="text-sm text-slate-600">${course.duree}, avec ${course.coach}</p>
-              <p class="pt-1 text-base font-bold text-slate-900">${course.prix} <span class="text-sm font-normal text-slate-500">par place</span></p>
+              <p class="pt-1 text-base font-bold text-slate-900">${course.prix} $ <span class="text-sm font-normal text-slate-500">par place</span></p>
             </div>
           </article>`
         
@@ -51,6 +51,17 @@ coursecontainer.innerHTML=carte;
 // Question : de quelles informations avez-vous besoin ?
 //  (cours choisi, créneau choisi, emplacements choisis...)
 // Indice : pourquoi un tableau est-il adapté pour les emplacements choisis ?
+
+
+let cartes = document.querySelectorAll('article');
+cartes.forEach(carte=>{
+    carte.addEventListener('click',()=>{
+    cartes.forEach(carte=>{
+        carte.classList.remove('ring-2', 'ring-teal-600')
+    })
+    carte.classList.add('ring-2', 'ring-teal-600')
+})
+})
 
 
 // ------------------------------------------------------------
