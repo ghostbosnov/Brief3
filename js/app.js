@@ -24,24 +24,9 @@
 //  summary-count, summary-total, confirm-button, message
 // TODO : récupérez ces éléments et rangez-les dans des constantes.
 // Question : quelle est la différence entre getElementById et querySelector ?
-let coursecontainer=document.querySelector('#courses-container');
+const coursecontainer=document.querySelector('#courses-container');
 let carte = document.createElement('article');
-carte='',
-cours.forEach((course)=>{
-    carte +=`<article class="cursor-pointer overflow-hidden rounded-2xl bg-white shadow-sm ring-2 ring-teal-600 transition hover:shadow-md" data-id="${course.id}">
-            <img src = ${course.image} alt="Visuel du cours ${course.nom}" class="h-36 w-full object-cover" />
-            <div class="space-y-1 p-4">
-              <span class="inline-block rounded-full bg-teal-50 px-2.5 py-0.5 text-xs font-medium text-teal-700">${course.id}</span>
-              <h3 class="text-lg font-semibold text-slate-900">${course.nom}</h3>
-              <p class="text-sm text-slate-600">${course.duree}, avec ${course.coach}</p>
-              <p class="pt-1 text-base font-bold text-slate-900">${course.prix} $ <span class="text-sm font-normal text-slate-500">par place</span></p>
-            </div>
-          </article>`
-        
-})
-coursecontainer.innerHTML=carte;
 
-   
 
 // ------------------------------------------------------------
 // ÉTAPE 2 : État de l'application
@@ -53,15 +38,7 @@ coursecontainer.innerHTML=carte;
 // Indice : pourquoi un tableau est-il adapté pour les emplacements choisis ?
 
 
-let cartes = document.querySelectorAll('article');
-cartes.forEach(carte=>{
-    carte.addEventListener('click',()=>{
-    cartes.forEach(carte=>{
-        carte.classList.remove('ring-2', 'ring-teal-600')
-    })
-    carte.classList.add('ring-2', 'ring-teal-600')
-})
-})
+
 
 
 // ------------------------------------------------------------
@@ -75,6 +52,20 @@ cartes.forEach(carte=>{
 //  - Quelle boucle ou méthode de tableau allez-vous utiliser ?
 //  - Comment stocker l'id du cours sur la carte (indice : data-*) ?
 //  - Les template literals (`...${valeur}...`) peuvent-ils vous aider ?
+carte=' '
+cours.forEach((course)=>{
+    carte =`<article class="cursor-pointer overflow-hidden rounded-2xl bg-white shadow-sm  transition hover:shadow-md" data-id="${course.id}">
+            <img src = ${course.image} alt="Visuel du cours ${course.nom}" class="h-36 w-full object-cover" />
+            <div class="space-y-1 p-4">
+              <span class="inline-block rounded-full bg-teal-50 px-2.5 py-0.5 text-xs font-medium text-teal-700">${course.id}</span>
+              <h3 class="text-lg font-semibold text-slate-900">${course.nom}</h3>
+              <p class="text-sm text-slate-600">${course.duree}, avec ${course.coach}</p>
+              <p class="pt-1 text-base font-bold text-slate-900">${course.prix} $ <span class="text-sm font-normal text-slate-500">par place</span></p>
+            </div>
+          </article>`
+      coursecontainer.innerHTML+=carte;  
+})
+
 
 
 // ------------------------------------------------------------
@@ -88,6 +79,67 @@ cartes.forEach(carte=>{
 //  - Faut-il un écouteur par carte, ou un seul sur le conteneur ? Quels sont les avantages ?
 //  - Comment retrouver le cours à partir de l'id lu dans la carte ?
 //  - Que faut-il réinitialiser quand on change de cours ?
+let slots_container=document.querySelector('#slots-container');
+const cartes = coursecontainer.querySelectorAll('[data-id]');
+let selectedCourseTitle=document.querySelector('#selected-course-title');
+cartes.forEach(carte=>{
+     carte.addEventListener('click',()=>{
+
+      slots_container.innerHTML=``
+        cartes.forEach(carte=>{
+            carte.classList.remove('ring-2', 'ring-teal-600')
+         })
+         carte.classList.add('ring-2', 'ring-teal-600')
+
+
+        let selectedCourse = cours.find(item =>item.id == carte.dataset.id)
+
+        selectedCourse.creneaux.forEach((item)=>{
+            const creneaux_btn =document.createElement('button')
+            creneaux_btn.innerHTML =`<button type="button" class="rounded-xl border px-4 py-2 text-sm font-medium transition border-slate-300 bg-white text-slate-800 hover:border-teal-600" data-id="${item.id}">
+            ${item.jour} <span class="font-normal">${item.heure}</span>
+           </button>`
+           slots_container.appendChild(creneaux_btn);
+           selectedCourseTitle.textContent= selectedCourse.nom
+        })
+
+        })
+    })
+    
+   
+    
+
+
+
+
+
+
+// let slots_container=document.querySelector('#slots-container');
+// let 
+
+// cartes.forEach(carte=>{
+//     carte.addEventListener('click',()=>{
+
+//         cartes.forEach(carte=>{
+//             carte.classList.remove('ring-2', 'ring-teal-600')
+//         })
+//         carte.classList.add('ring-2', 'ring-teal-600')
+
+//         let selectedCourse = cours.find(item => item.id == carte.dataset.id)
+//         console.log(selectedCourse);
+//         carte.creneaux.forEach(item,()=>{
+    //   creneaux_btn +=`<button type="button" class="rounded-xl border px-4 py-2 text-sm font-medium transition border-slate-300 bg-white text-slate-800 hover:border-teal-600" data-id="vendredi-19:00">
+    //          Vendredi <span class="font-normal">19:00</span>
+    //        </button>`
+//           slots_container.innerHTML=creneaux_btn
+//         })
+
+          
+          
+        
+//     })
+// })
+
 
 
 // ------------------------------------------------------------
@@ -100,6 +152,23 @@ cartes.forEach(carte=>{
 // Questions :
 //  - Quand cette fonction doit-elle être appelée ?
 //  - Que se passe-t-il si aucun cours n'est encore sélectionné ?
+  
+
+// let slots_container=document.querySelector('#slots-container');
+// let creneaux_place=cours.creneaux
+// let btncreanaux=document.createElement('button');
+// let day=creneaux_place[i].jour
+// creneaux_place.forEach((day)=>{
+//     btncreanaux.innerHTML=`<button type="button" class="rounded-xl border px-4 py-2 text-sm font-medium transition border-teal-600 bg-teal-600 text-white" data-id="lundi-18:30">
+//             ${day} <span class="font-normal">18:30</span>
+//           </button>`
+//           slots_container.
+// appendChild(btncreanaux)
+// })
+// slots_container.innerHTML=btncreanaux;
+// let a = cours.forEach(function (item){
+
+// })
 
 
 // ------------------------------------------------------------
