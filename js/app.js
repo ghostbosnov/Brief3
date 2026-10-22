@@ -4,7 +4,6 @@
 // Aucune solution n'est fournie : à vous de jouer !
 // ============================================================
 
-
 // ------------------------------------------------------------
 // ÉTAPE 0 : Découvrir les données
 // ------------------------------------------------------------
@@ -13,7 +12,6 @@
 //  - Que contient un cours ? Et un créneau ?
 //  - Comment accéder au prix du 2e cours ? Au 1er créneau du 3e cours ?
 // TODO : affichez `cours` dans la console avec console.log(), puis explorez-le.
-
 
 // ------------------------------------------------------------
 // ÉTAPE 1 : Sélectionner les éléments du DOM
@@ -24,9 +22,8 @@
 //  summary-count, summary-total, confirm-button, message
 // TODO : récupérez ces éléments et rangez-les dans des constantes.
 // Question : quelle est la différence entre getElementById et querySelector ?
-const coursecontainer=document.querySelector('#courses-container');
-let carte = document.createElement('article');
-
+const coursecontainer = document.querySelector("#courses-container");
+let carte = document.createElement("article");
 
 // ------------------------------------------------------------
 // ÉTAPE 2 : État de l'application
@@ -36,10 +33,6 @@ let carte = document.createElement('article');
 // Question : de quelles informations avez-vous besoin ?
 //  (cours choisi, créneau choisi, emplacements choisis...)
 // Indice : pourquoi un tableau est-il adapté pour les emplacements choisis ?
-
-
-
-
 
 // ------------------------------------------------------------
 // ÉTAPE 3 : Afficher les cours (US01)
@@ -52,9 +45,9 @@ let carte = document.createElement('article');
 //  - Quelle boucle ou méthode de tableau allez-vous utiliser ?
 //  - Comment stocker l'id du cours sur la carte (indice : data-*) ?
 //  - Les template literals (`...${valeur}...`) peuvent-ils vous aider ?
-carte=' '
-cours.forEach((course)=>{
-    carte =`<article class="cursor-pointer overflow-hidden rounded-2xl bg-white shadow-sm  transition hover:shadow-md" data-id="${course.id}">
+carte = " ";
+cours.forEach((course) => {
+  carte = `<article class="cursor-pointer overflow-hidden rounded-2xl bg-white shadow-sm  transition hover:shadow-md" data-id="${course.id}">
             <img src = ${course.image} alt="Visuel du cours ${course.nom}" class="h-36 w-full object-cover" />
             <div class="space-y-1 p-4">
               <span class="inline-block rounded-full bg-teal-50 px-2.5 py-0.5 text-xs font-medium text-teal-700">${course.id}</span>
@@ -62,11 +55,9 @@ cours.forEach((course)=>{
               <p class="text-sm text-slate-600">${course.duree}, avec ${course.coach}</p>
               <p class="pt-1 text-base font-bold text-slate-900">${course.prix} $ <span class="text-sm font-normal text-slate-500">par place</span></p>
             </div>
-          </article>`
-      coursecontainer.innerHTML+=carte;  
-})
-
-
+          </article>`;
+  coursecontainer.innerHTML += carte;
+});
 
 // ------------------------------------------------------------
 // ÉTAPE 4 : Sélectionner un cours (US02)
@@ -79,43 +70,48 @@ cours.forEach((course)=>{
 //  - Faut-il un écouteur par carte, ou un seul sur le conteneur ? Quels sont les avantages ?
 //  - Comment retrouver le cours à partir de l'id lu dans la carte ?
 //  - Que faut-il réinitialiser quand on change de cours ?
-let slots_container=document.querySelector('#slots-container');
-const cartes = coursecontainer.querySelectorAll('[data-id]');
-let selectedCourseTitle=document.querySelector('#selected-course-title');
-cartes.forEach(carte=>{
-     carte.addEventListener('click',()=>{
+let slots_container = document.querySelector("#slots-container");
+const cartes = coursecontainer.querySelectorAll("[data-id]");
+let selectedCourseTitle = document.querySelector("#selected-course-title");
+cartes.forEach((carte) => {
+  carte.addEventListener("click", () => {
+    slots_container.innerHTML = ``;
+    cartes.forEach((carte) => {
+      carte.classList.remove("ring-2", "ring-teal-600");
+    });
+    carte.classList.add("ring-2", "ring-teal-600");
 
-      slots_container.innerHTML=``
-        cartes.forEach(carte=>{
-            carte.classList.remove('ring-2', 'ring-teal-600')
-         })
-         carte.classList.add('ring-2', 'ring-teal-600')
+    let selectedCourse = cours.find((item) => item.id == carte.dataset.id);
+    selectedCourseTitle.textContent = selectedCourse.nom;
 
+    selectedCourse.creneaux.forEach((item) => {
+      const creneaux_btn = document.createElement("button");
+      creneaux_btn.setAttribute(
+        "class",
+        "rounded-xl border px-4 py-2 text-sm font-medium transition border-slate-300  text-slate-800 hover:border-teal-600",
+      );
+      creneaux_btn.setAttribute("data-id", item.id);
+      creneaux_btn.innerHTML = `${item.jour} <span class="font-normal">${item.heure}</span>`;
+      slots_container.appendChild(creneaux_btn);
+    });
 
-        let selectedCourse = cours.find(item =>item.id == carte.dataset.id)
+    let slotButtons = slots_container.querySelectorAll("[data-id]");
+    console.log(slotButtons);
 
-        selectedCourse.creneaux.forEach((item)=>{
-            const creneaux_btn =document.createElement('button')
-            creneaux_btn.innerHTML =`<button type="button" class="rounded-xl border px-4 py-2 text-sm font-medium transition border-slate-300 bg-white text-slate-800 hover:border-teal-600" data-id="${item.id}">
-            ${item.jour} <span class="font-normal">${item.heure}</span>
-           </button>`
-           slots_container.appendChild(creneaux_btn);
-           selectedCourseTitle.textContent= selectedCourse.nom
-        })
+    slotButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        slotButtons.forEach((b) => {
+          b.classList.remove("bg-teal-600", "text-white");
+        });
 
-        })
-    })
-    
-   
-    
-
-
-
-
-
+        btn.classList.add("bg-teal-600", "text-white");
+      });
+    });
+  });
+});
 
 // let slots_container=document.querySelector('#slots-container');
-// let 
+// let
 
 // cartes.forEach(carte=>{
 //     carte.addEventListener('click',()=>{
@@ -128,19 +124,14 @@ cartes.forEach(carte=>{
 //         let selectedCourse = cours.find(item => item.id == carte.dataset.id)
 //         console.log(selectedCourse);
 //         carte.creneaux.forEach(item,()=>{
-    //   creneaux_btn +=`<button type="button" class="rounded-xl border px-4 py-2 text-sm font-medium transition border-slate-300 bg-white text-slate-800 hover:border-teal-600" data-id="vendredi-19:00">
-    //          Vendredi <span class="font-normal">19:00</span>
-    //        </button>`
+//   creneaux_btn +=`<button type="button" class="rounded-xl border px-4 py-2 text-sm font-medium transition border-slate-300 bg-white text-slate-800 hover:border-teal-600" data-id="vendredi-19:00">
+//          Vendredi <span class="font-normal">19:00</span>
+//        </button>`
 //           slots_container.innerHTML=creneaux_btn
 //         })
 
-          
-          
-        
 //     })
 // })
-
-
 
 // ------------------------------------------------------------
 // ÉTAPE 5 : Afficher et sélectionner un créneau (US03)
@@ -152,7 +143,6 @@ cartes.forEach(carte=>{
 // Questions :
 //  - Quand cette fonction doit-elle être appelée ?
 //  - Que se passe-t-il si aucun cours n'est encore sélectionné ?
-  
 
 // let slots_container=document.querySelector('#slots-container');
 // let creneaux_place=cours.creneaux
@@ -170,7 +160,6 @@ cartes.forEach(carte=>{
 
 // })
 
-
 // ------------------------------------------------------------
 // ÉTAPE 6 : Afficher le plan de la salle (US04)
 // ------------------------------------------------------------
@@ -182,7 +171,6 @@ cartes.forEach(carte=>{
 //  - Comment construire "A1" à partir d'une rangée et d'un numéro ?
 //  - Comment savoir si un emplacement est dans la liste des occupés (includes) ?
 //  - Faut-il une boucle imbriquée ? Pourquoi ?
-
 
 // ------------------------------------------------------------
 // ÉTAPE 7 : Sélectionner / désélectionner des emplacements (US05)
@@ -196,7 +184,6 @@ cartes.forEach(carte=>{
 //  - Comment vérifier qu'un id est déjà dans le tableau ?
 //  - Que doit-il se passer si on clique sur un emplacement occupé ?
 
-
 // ------------------------------------------------------------
 // ÉTAPE 8 : Calculer et afficher le récapitulatif (US06)
 // ------------------------------------------------------------
@@ -207,7 +194,6 @@ cartes.forEach(carte=>{
 // Questions :
 //  - Que doit afficher le récapitulatif quand rien n'est sélectionné ?
 //  - Comment transformer un tableau en texte lisible ("C3, C4") (join) ?
-
 
 // ------------------------------------------------------------
 // ÉTAPE 9 : Confirmer une réservation fictive (US07)
@@ -220,14 +206,12 @@ cartes.forEach(carte=>{
 //  - Comment afficher ou masquer #message (classe "hidden") ?
 //  - Faut-il réinitialiser la sélection après confirmation ? Quelles en sont les conséquences ?
 
-
 // ------------------------------------------------------------
 // ÉTAPE 10 : Initialisation
 // ------------------------------------------------------------
 // TODO : au chargement, sélectionnez par défaut le premier cours
 //  et affichez toute l'interface à partir des données.
 // Question : dans quel ordre faut-il appeler vos fonctions ?
-
 
 // ------------------------------------------------------------
 // BONUS (Partie 2 : page « Mes réservations »)
